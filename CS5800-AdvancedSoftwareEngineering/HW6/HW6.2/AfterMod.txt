@@ -1,0 +1,127 @@
+@startuml
+
+object "testDocument : Document" as document
+object "propertiesFactory : CharacterPropertiesFactory" as propertiesFactory
+object "character1 : Character" as character1 {
+ character = 'H'
+}
+object "character2 : Character" as character2 {
+ character = 'e'
+}
+object "character3 : Character" as character3 {
+ character = 'l'
+}
+object "character4 : Character" as character4 {
+ character = 'l'
+}
+object "character5 : Character" as character5 {
+ character = 'o'
+}
+object "character6 : Character" as character6 {
+ character = 'W'
+}
+object "character7 : Character" as character7 {
+ character = 'o'
+}
+object "character8 : Character" as character8 {
+ character = 'r'
+}
+object "character9 : Character" as character9 {
+ character = 'l'
+}
+object "character10 : Character" as character10 {
+ character = 'd'
+}
+object "character11 : Character" as character11 {
+ character = 'C'
+}
+object "character12 : Character" as character12 {
+ character = 'S'
+}
+object "character13 : Character" as character13 {
+ character = '5'
+}
+object "character14 : Character" as character14 {
+ character = '8'
+}
+object "character15 : Character" as character15 {
+ character = '0'
+}
+object "character16 : Character" as character16 {
+ character = '0'
+}
+
+object "size12 : CharacterProperties" as size12 {
+ font = "Verdana"
+ color = "Red"
+ size = 12
+}
+
+object "size14 : CharacterProperties" as size14 {
+ font = "Arial"
+ color = "Black"
+ size = 14
+}
+
+object "size16 : CharacterProperties" as size16 {
+ font = "Arial"
+ color = "Black"
+ size = 16
+}
+
+object "size18 : CharacterProperties" as size18 {
+ font = "Verdana"
+ color = "Blue"
+ size = 18
+}
+
+object "size99 : CharacterProperties" as size99 {
+ font = "Calibri"
+ color = "Blue"
+ size = 99
+}
+
+
+document *- character1
+document *--- character2
+document *--- character3
+document *--- character4
+document *---- character5
+document *- character6
+document *------- character7
+document *-------- character8
+document *--------- character9
+document *---------- character10
+document *----------- character11
+document *------------ character12
+document *------ character13
+document *------- character14
+document *----- character15
+document *------ character16
+document *---------------- propertiesFactory
+
+propertiesFactory o- size12
+character13 *--- size12
+character14 *--- size12
+character15 *--- size12
+character16 *--- size12
+
+propertiesFactory o-- size14
+character2 *---- size14
+character3 *---- size14
+character4 *---- size14
+character5 *---- size14
+character7 *---- size14
+character8 *---- size14
+character9 *---- size14
+character10 *---- size14
+
+propertiesFactory o---- size18
+character11 *------ size18
+character12 *------ size18
+
+propertiesFactory o----- size99
+character1 *------- size99
+character6 *------- size99
+
+@enduml
