@@ -2,8 +2,8 @@ You can find all my work done during my Masters in Computer Science at Californi
 ##
 
 ### Spring 2024
-* CS4700 - Game Development --(Committed)
-* CS5190 - Computer Vision --(Committed)
+* CS4700 - Game Development -- [Committed]
+* CS5190 - Computer Vision -- [Committed]
 
 ### Fall 2023
 * CS5300 - Advanced Algorithms & Analysis <!-- (No Major Code, Just Paper Reviews & Presentations) -->
@@ -13,5 +13,5 @@ You can find all my work done during my Masters in Computer Science at Californi
 * Big Data Analytics & Cloud Computing
 
 ### Spring 2023
-* CS5800 - Advanced Software Engineering -- (Committed)
+* CS5800 - Advanced Software Engineering -- [Committed]
 * CS5250 - Advanced Computer Architecture <!-- (No Major Code, Just Paper Reviews & Presentations) -->
