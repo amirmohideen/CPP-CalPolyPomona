@@ -1,0 +1,3 @@
+interface Repairable {
+  void repair();
+}

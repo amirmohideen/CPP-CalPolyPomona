@@ -1,0 +1,3 @@
+interface Restorable {
+  void restore();
+}
