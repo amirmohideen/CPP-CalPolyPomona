@@ -127,108 +127,87 @@ def deleteDocument(col, id):
 
 def getIndex(collection):
     pipeline = [
-        { 
-            # Clean and split document text into lowercase terms
-            "$project": { 
+        {
+            # Extract alphanumeric words, ignoring special characters
+            "$project": {
                 "terms": {
-                    "$split": [
-                        {
-                            "$toLower": { 
-                                "$replaceAll": { 
-                                    "input": {
-                                        "$replaceAll": { 
-                                            "input": {
-                                                "$replaceAll": { 
-                                                    "input": {
-                                                        "$replaceAll": { 
-                                                            "input": "$text", 
-                                                            "find": "?", 
-                                                            "replacement": "" 
-                                                        }
-                                                    }, 
-                                                    "find": "!", 
-                                                    "replacement": "" 
-                                                }
-                                            }, 
-                                            "find": ",", 
-                                            "replacement": "" 
-                                        }
-                                    }, 
-                                    "find": ".", 
-                                    "replacement": "" 
-                                }
-                            }
-                        },
-                        " "  # Split text by spaces
-                    ] 
-                }, 
+                    "$regexFindAll": {
+                        "input": { "$toLower": "$text" },
+                        "regex": "[a-zA-Z0-9]+"  # Match alphanumeric characters only
+                    }
+                },
                 "title": 1,  # Include document title
                 "_id": 0
-            } 
+            }
+        },
+        {
+            # Extract the `match` field from regex results
+            "$project": {
+                "terms": "$terms.match",  # Extract matched words from regex
+                "title": 1
+            }
         },
         { "$unwind": "$terms" },  # Flatten the terms into separate rows
-        { 
+        {
             # Group by term and title, count occurrences
             "$group": {
                 "_id": { "title": "$title", "term": "$terms" },
-                "term_count": { "$count": {} },  # Count occurrences
+                "term_count": { "$sum": 1 }  # Sum occurrences
             }
         },
-        { 
+        {
             # Create "title:count" string for each term
             "$project": {
                 "term": "$_id.term",
-                "title_term_count_map": { 
-                    "$concat": ["$_id.title", ":", {"$toString" : "$term_count"}] 
+                "title_term_count_map": {
+                    "$concat": ["$_id.title", ":", { "$toString": "$term_count" }]
                 },
                 "_id": 0,
             }
         },
-        { 
+        {
             # Group by term and collect "title:count" strings into array
-            "$group": { 
+            "$group": {
                 "_id": "$term",
                 "term_count_per_title_array": { "$push": "$title_term_count_map" }
             }
         },
-        { 
+        {
             # Join all "title:count" strings for each term
-            "$addFields": {
+            "$project": {
                 "term_counts_per_title": {
                     "$reduce": {
                         "input": "$term_count_per_title_array",
                         "initialValue": "",
                         "in": {
                             "$cond": {
-                                "if": { "$eq": [ { "$indexOfArray": [ "$term_count_per_title_array", "$$this" ] }, 0 ] },
-                                "then": { "$concat": [ "$$value", "$$this" ] },
-                                "else": { "$concat": [ "$$value", ", ", "$$this" ] }
+                                "if": { "$eq": [{ "$indexOfArray": ["$term_count_per_title_array", "$$this"] }, 0] },
+                                "then": { "$concat": ["$$value", "$$this"] },
+                                "else": { "$concat": ["$$value", ", ", "$$this"] }
                             }
                         }
                     }
                 }
             }
         },
-        { 
+        {
             # Create key-value objects for each term
             "$project": {
                 "kvObject": { "k": "$_id", "v": "$term_counts_per_title" },
                 "_id": 0
             }
         },
-        { 
+        {
             # Collect key-value pairs into a single object
             "$group": {
-                "_id": "null",
+                "_id": None,
                 "kvObjects": { "$push": "$kvObject" }
             }
         },
-        { 
+        {
             # Convert array to a key-value object for final output
             "$project": {
-                "results": {
-                    "$arrayToObject": "$kvObjects"
-                }
+                "results": { "$arrayToObject": "$kvObjects" }
             }
         }
     ]
