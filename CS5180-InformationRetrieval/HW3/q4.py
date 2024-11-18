@@ -3,7 +3,7 @@
 # FILENAME: CS5180HW3
 # SPECIFICATION: Q4
 # FOR: CS 5180- Assignment #3
-# TIME SPENT: 12 hours
+# TIME SPENT: 1 hour
 #-----------------------------------------------------------*/
 
 
